@@ -28,7 +28,6 @@ Schema:
 }
 """
 import json
-from pathlib import Path
 from config import STATE_FILE
 
 
@@ -58,3 +57,9 @@ def append_oi_history(node: dict, ts: int, oi_usd: float, max_points: int = 288)
     """Keep ~24h of 5-min snapshots."""
     node["oi_history"].append({"ts": ts, "oi_usd": oi_usd})
     node["oi_history"] = node["oi_history"][-max_points:]
+
+
+def append_cvd_history(node: dict, ts: int, cvd: float, max_points: int = 288) -> None:
+    """Keep ~24h of CVD snapshots so the frontend can plot a line."""
+    node.setdefault("cvd_history", []).append({"ts": ts, "cvd": cvd})
+    node["cvd_history"] = node["cvd_history"][-max_points:]

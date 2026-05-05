@@ -60,7 +60,17 @@ header .meta a { color: var(--accent); margin-left: 12px; text-decoration: none;
 .stat strong { display: block; font-size: 16px; font-weight: 600; margin-top: 4px; }
 
 .chart-wrap { padding: 12px 20px; }
-#chart { height: 480px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+#chart, #cvd-chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+#chart { height: 480px; }
+#cvd-chart { height: 200px; }
+.pane-header { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 6px 2px; }
+
+.indicators { display: flex; gap: 6px; }
+.indicator-btn {
+  background: transparent; border: 1px solid var(--border); color: var(--muted);
+  padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;
+}
+.indicator-btn.active { background: rgba(245, 197, 24, 0.15); color: var(--gold); border-color: var(--gold); }
 
 .fills { padding: 12px 20px 30px; }
 .fills h2 { font-size: 14px; color: var(--muted); margin: 0 0 8px; font-weight: 500; }

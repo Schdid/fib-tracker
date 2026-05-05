@@ -23,6 +23,9 @@
         <button data-x="bybit">Bybit</button>
       </div>
       <div id="tf-toggle" class="toggle"></div>
+      <div class="indicators">
+        <button id="cvd-toggle" class="indicator-btn">+ CVD</button>
+      </div>
     </div>
   </nav>
 
@@ -36,6 +39,11 @@
 
   <section class="chart-wrap">
     <div id="chart"></div>
+  </section>
+
+  <section id="cvd-wrap" class="chart-wrap" style="display:none">
+    <div class="pane-header">CVD (Cumulative Volume Delta) — running, last 24h</div>
+    <div id="cvd-chart"></div>
   </section>
 
   <section class="fills">

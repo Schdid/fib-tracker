@@ -56,6 +56,7 @@ def process_coin_exchange(state: dict, coin: str, exchange: str, symbol: str) ->
             trades = fetcher.get_recent_trades(symbol)
             delta = compute_cvd.cvd_from_bybit_trades(trades)
         node["cvd"] = compute_cvd.running_cvd(node.get("cvd", 0.0), delta)
+        store.append_cvd_history(node, int(time.time() * 1000), node["cvd"])
     except Exception as e:
         print(f"[{coin} {exchange}] CVD fetch failed: {e}")
 
