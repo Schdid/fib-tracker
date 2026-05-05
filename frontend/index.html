@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fib Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Fib Tracker</h1>
+    <div class="meta">
+      <span id="updated">loading…</span>
+      <a id="refresh" href="#">refresh</a>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div id="coin-tabs" class="tab-row"></div>
+    <div class="controls">
+      <div id="exchange-toggle" class="toggle">
+        <button data-x="binance" class="active">Binance</button>
+        <button data-x="bybit">Bybit</button>
+      </div>
+      <div id="tf-toggle" class="toggle"></div>
+    </div>
+  </nav>
+
+  <section class="stats">
+    <div class="stat"><label>Open Interest</label><strong id="s-oi">—</strong></div>
+    <div class="stat"><label>Funding Rate</label><strong id="s-funding">—</strong></div>
+    <div class="stat"><label>Next Funding</label><strong id="s-next">—</strong></div>
+    <div class="stat"><label>CVD (running)</label><strong id="s-cvd">—</strong></div>
+    <div class="stat"><label>Mark Price</label><strong id="s-price">—</strong></div>
+  </section>
+
+  <section class="chart-wrap">
+    <div id="chart"></div>
+  </section>
+
+  <section class="fills">
+    <h2>Fib levels</h2>
+    <table id="fills-table">
+      <thead><tr><th>Ratio</th><th>Price</th><th>Status</th><th>Filled at</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
