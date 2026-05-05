@@ -21,6 +21,7 @@ let chart = null;
 let candleSeries = null;
 let priceLines = [];
 let swingSeries = null;
+let fillConnectors = [];   // line series drawn from swing-end to each fill point
 
 // CVD chart
 let cvdChart = null;
@@ -144,6 +145,8 @@ function clearOverlays() {
     chart.removeSeries(swingSeries);
     swingSeries = null;
   }
+  for (const s of fillConnectors) chart.removeSeries(s);
+  fillConnectors = [];
   candleSeries.setMarkers([]);
 }
 
@@ -159,31 +162,39 @@ function renderPriceChart(node, tfNode) {
 
   clearOverlays();
 
-  // 2. Fib horizontal price lines.
+  if (candles.length === 0) return;
+
+  const direction = tfNode.direction;       // 'up' = normal fib, 'down' = reverse fib
+  const isNormal  = direction === "up";
+  const firstTime = candles[0].time;
+  const lastTime  = candles[candles.length - 1].time;
+
+  // 2. Fib horizontal price lines, colored by direction.
+  // Normal fib (low → high): retracement is DOWN, levels sit BELOW the high → blue
+  // Reverse fib (high → low): retracement is UP, levels sit ABOVE the low → orange
+  const openColor = isNormal ? "#4f8cff" : "#ff8c4f";
   const filledRatios = new Set((tfNode.filled || []).map(x => x.ratio));
   if (tfNode.levels) {
     for (const [ratio, price] of Object.entries(tfNode.levels)) {
       const isFilled = filledRatios.has(parseFloat(ratio));
       priceLines.push(candleSeries.createPriceLine({
         price,
-        color: isFilled ? "#f5c518" : "#4f8cff",
-        lineWidth: isFilled ? 2 : 1,
-        lineStyle: isFilled ? 0 : 2, // solid when filled, dashed when open
+        color: isFilled ? "#f5c518" : openColor,
+        lineWidth: isFilled ? 3 : 1,
+        lineStyle: isFilled ? 0 : 2,        // solid when filled, dashed when open
         axisLabelVisible: true,
-        title: `fib ${ratio}${isFilled ? " ✓" : ""}`,
+        title: `${ratio}${isFilled ? " ✓ FILLED" : ""}`,
       }));
     }
   }
 
-  // 3. Diagonal swing line from start pivot → end pivot (the "fib drag").
-  if (tfNode.swing_start && tfNode.swing_end && candles.length > 0) {
-    const firstCandleTime = candles[0].time;
-    const lastCandleTime  = candles[candles.length - 1].time;
-    const startTime = Math.max(Math.floor(tfNode.swing_start.ts / 1000), firstCandleTime);
-    const endTime   = Math.min(Math.floor(tfNode.swing_end.ts   / 1000), lastCandleTime);
+  // 3. Diagonal swing line — thick gold so the "drag" is obvious.
+  if (tfNode.swing_start && tfNode.swing_end) {
+    const startTime = Math.max(Math.floor(tfNode.swing_start.ts / 1000), firstTime);
+    const endTime   = Math.min(Math.floor(tfNode.swing_end.ts   / 1000), lastTime);
     if (endTime > startTime) {
       swingSeries = chart.addLineSeries({
-        color: "#8a93a6", lineWidth: 2, lineStyle: 2,
+        color: "#f5c518", lineWidth: 2, lineStyle: 0,
         priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
       });
       swingSeries.setData([
@@ -193,26 +204,70 @@ function renderPriceChart(node, tfNode) {
     }
   }
 
-  // 4. Markers on candles where fills happened (only those within the visible window).
-  if (tfNode.filled && candles.length > 0) {
-    const firstTime = candles[0].time;
-    const lastTime  = candles[candles.length - 1].time;
-    const direction = tfNode.direction;
-    const markers = (tfNode.filled || [])
-      .filter(f => !f.backfilled)  // don't mark historical seed fills
-      .map(f => ({
-        time: Math.floor(f.ts / 1000),
-        position: direction === "up" ? "belowBar" : "aboveBar",
-        color: "#f5c518",
-        shape: direction === "up" ? "arrowUp" : "arrowDown",
-        text: `${f.ratio}`,
-      }))
-      .filter(m => m.time >= firstTime && m.time <= lastTime)
-      .sort((a, b) => a.time - b.time);
-    if (markers.length) candleSeries.setMarkers(markers);
+  // 4. Build all markers in one pass: pivots + fills.
+  const markers = [];
+
+  // Swing pivots (start = small dot, end = labeled triangle showing direction)
+  if (tfNode.swing_start) {
+    const t = Math.max(Math.floor(tfNode.swing_start.ts / 1000), firstTime);
+    markers.push({
+      time: t,
+      position: tfNode.swing_start.kind === "L" ? "belowBar" : "aboveBar",
+      color: "#8a93a6",
+      shape: "circle",
+      text: tfNode.swing_start.kind === "L" ? "L" : "H",
+    });
+  }
+  if (tfNode.swing_end) {
+    const t = Math.min(Math.floor(tfNode.swing_end.ts / 1000), lastTime);
+    markers.push({
+      time: t,
+      position: tfNode.swing_end.kind === "L" ? "belowBar" : "aboveBar",
+      color: tfNode.swing_end.kind === "H" ? "#e74c3c" : "#2ecc71",
+      shape: tfNode.swing_end.kind === "H" ? "arrowDown" : "arrowUp",
+      text: tfNode.swing_end.kind === "H" ? `HIGH ${tfNode.swing_end.price}` : `LOW ${tfNode.swing_end.price}`,
+    });
   }
 
-  // 5. CRITICAL: re-enable autoScale + fitContent so switching coin/tf rescales.
+  // Fill markers + horizontal connector lines from swing-end to fill point.
+  if (tfNode.filled && tfNode.swing_end) {
+    const swingEndTime = Math.floor(tfNode.swing_end.ts / 1000);
+    for (const f of tfNode.filled) {
+      if (f.backfilled) continue;
+      const fillTime = Math.floor(f.ts / 1000);
+      if (fillTime < firstTime || fillTime > lastTime) continue;
+
+      // Fill candle marker (gold arrow + ratio label)
+      markers.push({
+        time: fillTime,
+        position: isNormal ? "belowBar" : "aboveBar",
+        color: "#f5c518",
+        shape: "circle",
+        text: `${f.ratio} HIT`,
+      });
+
+      // Connector line: horizontal from swing-end timestamp to fill timestamp at fill price.
+      const connectorStart = Math.max(swingEndTime, firstTime);
+      if (fillTime > connectorStart) {
+        const ls = chart.addLineSeries({
+          color: "#f5c518", lineWidth: 2, lineStyle: 0,
+          priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+        });
+        ls.setData([
+          { time: connectorStart, value: f.price },
+          { time: fillTime,        value: f.price },
+        ]);
+        fillConnectors.push(ls);
+      }
+    }
+  }
+
+  if (markers.length) {
+    markers.sort((a, b) => a.time - b.time);
+    candleSeries.setMarkers(markers);
+  }
+
+  // 5. Re-enable autoScale + fitContent so switching coin/tf rescales properly.
   chart.priceScale("right").applyOptions({ autoScale: true });
   chart.timeScale().fitContent();
 }
@@ -258,6 +313,20 @@ function render() {
   document.getElementById("s-price").textContent = fmtNum(node.mark_price);
 
   const tfNode = node.timeframes?.[ui.tf];
+
+  // Direction badge: NORMAL (low → high) vs REVERSE (high → low)
+  const dirEl = document.getElementById("s-fibdir");
+  if (tfNode?.direction === "up") {
+    dirEl.textContent = "NORMAL ↗ (low → high)";
+    dirEl.className = "normal";
+  } else if (tfNode?.direction === "down") {
+    dirEl.textContent = "REVERSE ↘ (high → low)";
+    dirEl.className = "reverse";
+  } else {
+    dirEl.textContent = "—";
+    dirEl.className = "";
+  }
+
   if (!tfNode || !tfNode.candles) {
     ensurePriceChart();
     candleSeries.setData([]);

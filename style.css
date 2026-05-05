@@ -82,5 +82,8 @@ tr:last-child td { border-bottom: none; }
 .tag-filled { color: var(--gold); font-weight: 600; }
 .tag-open   { color: var(--muted); }
 
+#s-fibdir.normal  { color: var(--green); }
+#s-fibdir.reverse { color: var(--red); }
+
 .pos { color: var(--green); }
 .neg { color: var(--red); }
