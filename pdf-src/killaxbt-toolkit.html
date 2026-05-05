@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>KillaXBT — Trading Toolkit</title>
+<style>
+  @page {
+    size: A4;
+    margin: 14mm 14mm 16mm 14mm;
+  }
+  :root {
+    --bg: #0d0f14;
+    --panel: #151821;
+    --border: #2a2f3d;
+    --text: #e6e8ee;
+    --muted: #8a93a6;
+    --gold: #f5c518;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --blue: #4f8cff;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--text); margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
+    font-size: 10.5pt; line-height: 1.45; }
+  .page { padding: 0; }
+  h1 { font-size: 22pt; margin: 0 0 4pt; letter-spacing: -0.3pt; }
+  h2 { font-size: 12pt; margin: 18pt 0 6pt; padding-bottom: 4pt;
+    border-bottom: 1px solid var(--border); color: var(--gold);
+    text-transform: uppercase; letter-spacing: 1.2pt; font-weight: 600; }
+  h3 { font-size: 10.5pt; margin: 10pt 0 4pt; color: var(--text); font-weight: 600; }
+  p, ul, ol, table { margin: 4pt 0 8pt; }
+  ul, ol { padding-left: 16pt; }
+  li { margin-bottom: 3pt; }
+  .muted { color: var(--muted); }
+  .gold { color: var(--gold); }
+  .green { color: var(--green); }
+  .red { color: var(--red); }
+  .blue { color: var(--blue); }
+  strong { color: var(--text); }
+
+  /* Cover header */
+  .cover {
+    background: linear-gradient(135deg, #1a1d27 0%, #0d0f14 100%);
+    padding: 18pt 18pt;
+    border: 1px solid var(--border);
+    border-radius: 6pt;
+    margin-bottom: 14pt;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .cover-l .handle { color: var(--gold); font-size: 11pt; font-family: "SF Mono", Menlo, monospace; }
+  .cover-l h1 { color: #fff; }
+  .cover-l .tagline { color: var(--muted); font-size: 9.5pt; margin-top: 4pt; max-width: 110mm; }
+  .cover-r { text-align: right; color: var(--muted); font-size: 8.5pt; }
+  .cover-r .followers { font-size: 18pt; color: var(--gold); font-weight: 700; line-height: 1; }
+  .cover-r .followers-label { color: var(--muted); font-size: 8pt; letter-spacing: 1pt; text-transform: uppercase; }
+
+  /* Cards */
+  .grid {
+    display: grid; gap: 8pt;
+  }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 5pt;
+    padding: 10pt 12pt;
+    page-break-inside: avoid;
+  }
+  .card .label {
+    color: var(--gold); font-size: 8pt; letter-spacing: 1.2pt;
+    text-transform: uppercase; margin-bottom: 4pt; font-weight: 600;
+  }
+  .card .value { font-size: 11pt; }
+  .card p:last-child { margin-bottom: 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  th, td { text-align: left; padding: 5pt 8pt; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; font-size: 8.5pt;
+    letter-spacing: 0.8pt; text-transform: uppercase; }
+  tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    border-left: 2px solid var(--gold);
+    background: rgba(245, 197, 24, 0.06);
+    margin: 6pt 0;
+    padding: 6pt 10pt;
+    color: var(--text);
+    font-style: italic;
+    font-size: 9.5pt;
+  }
+  blockquote .src { display: block; color: var(--muted); font-size: 8pt; margin-top: 3pt; font-style: normal; }
+
+  .vocab {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4pt 14pt;
+  }
+  .vocab span { font-size: 9pt; color: var(--text); }
+  .vocab span::before { content: "▸"; color: var(--gold); margin-right: 5pt; }
+
+  .footer {
+    margin-top: 14pt; padding-top: 8pt;
+    border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 7.5pt;
+  }
+  .sources { columns: 2; column-gap: 14pt; column-rule: 1px solid var(--border);
+    font-size: 7.5pt; line-height: 1.4; color: var(--muted); }
+  .sources a { color: var(--blue); text-decoration: none; word-break: break-word; }
+
+  .page-break { page-break-after: always; }
+  section { page-break-inside: avoid; }
+  h2 { page-break-after: avoid; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER HEADER -->
+  <div class="cover">
+    <div class="cover-l">
+      <div class="handle">@KillaXBT</div>
+      <h1>Trading Toolkit</h1>
+      <div class="tagline">Wick hunting at @scalpxofficial. ₿itcoin order-flow trader. HTF swing thesis stitched from liquidation maps, FVGs, CME gaps, monthly opens, and diminishing-cycle math.</div>
+    </div>
+    <div class="cover-r">
+      <div class="followers">180k+</div>
+      <div class="followers-label">followers on X</div>
+      <div style="margin-top: 8pt;">90% HTF accuracy<br/>self-claimed this cycle</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: IDENTITY -->
+  <section>
+    <h2>1. Identity</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="label">Style</div>
+        <div class="value">HTF directional swing<br/>(weeks → months)</div>
+      </div>
+      <div class="card">
+        <div class="label">Primary asset</div>
+        <div class="value">BTC (>95% of output)<br/>occasional ETH</div>
+      </div>
+      <div class="card">
+        <div class="label">Frequency</div>
+        <div class="value">1–3 long-form posts/day<br/>plus weekly setup</div>
+      </div>
+      <div class="card">
+        <div class="label">Self-billed framework</div>
+        <div class="value">"Rotational market mathematics"<br/>+ diminishing cycle analysis</div>
+      </div>
+      <div class="card">
+        <div class="label">Affiliations</div>
+        <div class="value">ScalpX trading desk<br/>Bitunix affiliate</div>
+      </div>
+      <div class="card">
+        <div class="label">Reputation</div>
+        <div class="value">Called $121.3k cycle top<br/>(actual ~$126.1k, 3.9% off)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: TOOLKIT -->
+  <section>
+    <h2>2. Toolkit — what he actually uses</h2>
+
+    <div class="card" style="margin-bottom: 8pt;">
+      <div class="label">Liquidation heatmaps (Coinglass)</div>
+      <p>Reads <strong>7-day (LTF)</strong> and <strong>30-day (HTF)</strong> heatmaps simultaneously. Splits long-side vs short-side liquidation clusters, then trades the asymmetry into the heavier cluster.</p>
+      <blockquote>"BTC is trapped between long and short liquidation zones in both low and high time frames signaling a moment of market indecision."<span class="src">— @KillaXBT, June 2025 (NewsBTC)</span></blockquote>
+    </div>
+
+    <div class="card" style="margin-bottom: 8pt;">
+      <div class="label">Orderbook delta / spot CVD</div>
+      <p>Watches <strong>spot CVD slope vs price slope</strong>. Buyers accumulating during a drop = HTF long signal.</p>
+      <blockquote>"On this recent drop, orderbook delta has flipped positive. A sign that buyers are accumulating. Since September, every time delta has flipped green we have seen a push upwards on the HTF."<span class="src">— @KillaXBT, Oct 15 2025 (InvestX)</span></blockquote>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="label">Fair Value Gaps (FVG / imbalance)</div>
+        <p>ICT-style 3-candle gaps on the daily timeframe. Treats them as price magnets that "eventually get filled to rebalance order flow."</p>
+        <blockquote>"Daily fair value gap extending down to $113,355 ... such inefficiencies eventually get filled, as price retraces into the zone to rebalance order flow."<span class="src">— Sept 2025</span></blockquote>
+      </div>
+      <div class="card">
+        <div class="label">CME gaps</div>
+        <p>Treats weekend CME gaps as near-guaranteed targets. Quoted historical fill rate: <strong class="gold">98% since BTC at $16k</strong>.</p>
+        <blockquote>"Since trading at $16,000, the Bitcoin market has seen 98% of weekend CME gaps filled."<span class="src">— XT.com, Aug 2025</span></blockquote>
+      </div>
+      <div class="card">
+        <div class="label">Weekly / monthly opens</div>
+        <p><strong>Flippable pivots.</strong> Above monthly open = bullish bias; failure to hold = trigger to fade. Tracks every weekly open as the immediate level.</p>
+        <blockquote>"Bitcoin started the month on a strong technical footing, flipping the monthly open at $115,752 into support."<span class="src">— Bitcoinist, Aug 2025</span></blockquote>
+      </div>
+      <div class="card">
+        <div class="label">Funding rate</div>
+        <p>Negative funding + capitulation = contrarian long trigger. Sustained high positive funding = exhaustion warning. Earns funding fees on shorts as part of his thesis.</p>
+      </div>
+      <div class="card">
+        <div class="label">111-day SMA</div>
+        <p>Binary trend filter on the daily. Below = no longs / size down. Above = trend reversal confirmed.</p>
+      </div>
+      <div class="card">
+        <div class="label">Diminishing cycle multiple</div>
+        <p>Cycle high-to-low decay: <strong>15.5x → 7.6x → 6.3x → 4.5x → 3.25x</strong> projected. Divides current ATH ($126k) by 3.25 to project a <strong>$38.8k cycle bottom</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 3: TIMEFRAMES -->
+  <section>
+    <h2>3. Per-timeframe focus</h2>
+    <table>
+      <thead><tr><th style="width: 16%;">Timeframe</th><th>What he uses it for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1W / 1M</strong></td><td>The decision layer. <span class="muted">"Weekly close above $80k invalidates my short."</span> Monthly opens, monthly FVGs, monthly highs/lows.</td></tr>
+        <tr><td><strong>1D</strong></td><td>Bias and key-level mapping. Daily FVGs, daily POIs, 111-day SMA as trend confirmation.</td></tr>
+        <tr><td><strong>4H</strong></td><td>Range structure. Marks "ideal long zones" and supply pockets ($115k demand, $112–113.8k imbalance).</td></tr>
+        <tr><td><strong>1H</strong></td><td>LTF execution refinement. "LTF downtrend line break", liquidation cluster invalidation.</td></tr>
+        <tr><td><strong>15m / 5m</strong></td><td>Rarely referenced publicly. Delegates this to ScalpX desk colleagues (Saint, etc.) who run scalp setups.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 4: SETUP STACK -->
+  <section>
+    <h2>4. How he stacks confluences</h2>
+    <p>Notable example — March 16 2026 short thesis built from <strong>5 stacked signals</strong>:</p>
+    <blockquote>"We have 7 green consecutive daily candles, We pump over the weekend, We form a CME gap below, Directly into supply/liquidity, At the start of a new weekly open, And all of a sudden $BTC is bullish? Got it."<span class="src">— @KillaXBT, March 16 2026 (Coincu). Price subsequently dropped from ~$84k to mid-$70k.</span></blockquote>
+    <p class="muted" style="margin-top: 8pt;">Lesson: he does not take single-signal trades. Conviction comes from <strong>3+ stacked confluences</strong> pointing the same direction.</p>
+  </section>
+
+  <!-- SECTION 5: RISK -->
+  <section>
+    <h2>5. Risk management rules</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="label">Position size</div>
+        <div class="value">10–15% of portfolio per HTF swing</div>
+      </div>
+      <div class="card">
+        <div class="label">Leverage</div>
+        <div class="value">2.5–3x cross (his swings)<br/>3–4x recommended ceiling for users<br/><span class="red">NEVER 10x</span></div>
+      </div>
+      <div class="card">
+        <div class="label">Margin type</div>
+        <div class="value">Cross > isolated. <span class="muted">"Cross margin allows me to absorb volatility without emotional reaction."</span></div>
+      </div>
+      <div class="card">
+        <div class="label">Liquidation distance</div>
+        <div class="value">Sets liquidation 40%+ from entry</div>
+      </div>
+      <div class="card">
+        <div class="label">Stop loss discipline</div>
+        <div class="value">Weekly-close based for HTF swings.<br/>Will move SL UP, never DOWN.<br/>Wicks don't invalidate; closes do.</div>
+      </div>
+      <div class="card">
+        <div class="label">R:R framing</div>
+        <div class="value">Asymmetric. Risks 10–15% to capture 30–50% expected move.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: VOCABULARY -->
+  <section>
+    <h2>6. Vocabulary cheat sheet</h2>
+    <p class="muted">Recurring phrases — internalize these to think in his framework.</p>
+    <div class="vocab">
+      <span>Mechanical price action</span>
+      <span>Market-maker orchestrated</span>
+      <span>Textbook range</span>
+      <span>Liquidity grab</span>
+      <span>Double sweep</span>
+      <span>Wick low / wick high</span>
+      <span>Monthly open trap</span>
+      <span>Weekly open as pivot</span>
+      <span>CME gap as magnet</span>
+      <span>Imbalance zone</span>
+      <span>FVG fill</span>
+      <span>Diminishing cycle multiple</span>
+      <span>Spot vs perp divergence</span>
+      <span>HTF accumulation</span>
+      <span>Capitulation long</span>
+      <span>Asymmetric R:R</span>
+    </div>
+  </section>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 7: STUDY PATH -->
+  <section>
+    <h2>7. To become like him — ranked study path</h2>
+    <p class="muted">Tailored for someone already running fib + OI + funding + CVD on Binance/Bybit.</p>
+    <ol>
+      <li><strong>Add a Coinglass liquidation heatmap pane</strong> to the dashboard. Read 7d + 30d simultaneously. Mark dense clusters as TP/SL targets. <strong class="gold">Single biggest gap to close.</strong></li>
+      <li><strong>Add CME futures BTC chart</strong> and tag every weekend gap. Maintain a live "unfilled CME gaps" list as TP candidates.</li>
+      <li><strong>Anchor fib swings to the prior monthly open</strong> instead of arbitrary swings. Hypothesis: tighter stops + cleaner confluence.</li>
+      <li><strong>Spot-CVD vs perp-CVD divergence alerting.</strong> Trigger when 4H spot CVD slope is opposite price slope. Killa explicitly trades this.</li>
+      <li><strong>Mark daily FVGs as a chart overlay</strong> (3-candle imbalance gaps). Long when fib 0.5–0.618 zone overlaps an unfilled bullish FVG.</li>
+      <li><strong>Add 111-day SMA</strong> to BTC chart as a binary trend filter. Below = no longs / reduce size.</li>
+      <li><strong>Adopt the "weekly close" stop rule</strong> for HTF swings. Stop using intraday SLs for swings.</li>
+      <li><strong>Track every monthly open</strong> as a flippable pivot. Above = bullish bias; below = bearish.</li>
+      <li><strong>Reduce leverage on small-range setups.</strong> Killa's max 3–4x rule on 4–5% range setups.</li>
+      <li><strong>Build a personal "scenarios" template.</strong> Each Sunday evening: write Scenario 1 / Scenario 2 / Invalidation in his format.</li>
+    </ol>
+  </section>
+
+  <!-- SECTION 8: HABITS -->
+  <section>
+    <h2>8. Daily habits to copy</h2>
+    <ul>
+      <li><strong>Sunday evening:</strong> write the next week's scenario plan in two short paragraphs (favored / alternative / invalidation).</li>
+      <li><strong>Monday + Friday:</strong> check funding rate extremes and OI delta at session opens.</li>
+      <li><strong>Anytime BTC rallies on a weekend:</strong> flag the resulting CME gap as a magnet.</li>
+      <li><strong>Monthly close:</strong> re-check whether monthly open flipped to support/resistance and rebias.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 9: METHODOLOGY OVERLAP -->
+  <section>
+    <h2>9. Methodology lineage</h2>
+    <p>KillaXBT's vocabulary and setups overlap with several established frameworks. Studying these gives you the underlying theory behind what he posts:</p>
+    <ul>
+      <li><strong>ICT (Inner Circle Trader / Michael J. Huddleston)</strong> — order blocks, FVGs, killzones, OTE entry zone (0.62–0.79, which overlaps directly with the BTC fib levels 0.75 and 0.7816).</li>
+      <li><strong>Wyckoff method</strong> — accumulation/distribution phases, spring/upthrust, effort vs result.</li>
+      <li><strong>Diminishing Cycles (Avramescu BDRT)</strong> — the mathematical model behind the cycle-decay multiple.</li>
+    </ul>
+  </section>
+
+  <!-- SOURCES -->
+  <section>
+    <h2>Sources</h2>
+    <div class="sources">
+      <a href="https://bitcoinist.com/bitcoin-bulls-in-control-120000-test-run-toward-ath">Bitcoinist — $120k Test (Aug 2025)</a><br/>
+      <a href="https://www.tradingview.com/news/newsbtc:cde896c5d094b:0-bitcoin-in-stalemate-with-liquidation-traps-on-both-sides-of-the-market/">NewsBTC — Liquidation Traps (Jun 2025)</a><br/>
+      <a href="https://www.tradingview.com/news/newsbtc:2b1b0a8bd094b:0-bitcoin-bulls-gain-traction-from-ideal-long-zone-2-scenarios-for-the-week-ahead/">NewsBTC — Ideal Long Zone (Jul 2025)</a><br/>
+      <a href="https://www.tradingview.com/news/newsbtc:4ca45765c094b:0-bitcoin-tests-weekly-open-as-113-300-fair-value-gap-looms-what-it-means/">NewsBTC — Weekly Open + FVG (Sep 2025)</a><br/>
+      <a href="https://www.tradingview.com/news/newsbtc:55641d0e9094b:0-bitcoin-market-structure-signals-potential-sweep-before-upswing-details/">NewsBTC — Sweep Before Upswing (Nov 2025)</a><br/>
+      <a href="https://investx.fr/en/crypto-news/bitcoin-on-the-verge-of-exploding-to-new-ath-the-signal-that-never-fails/">InvestX — Orderbook Delta Flip (Oct 2025)</a><br/>
+      <a href="https://www.xt.com/en/blog/post/bitcoin-8-below-cme-gap-ahead-of-monthly-close-will-history-repeat">XT.com — CME Gap 98% Fill Rate (Aug 2025)</a><br/>
+      <a href="https://bitcoinethereumnews.com/bitcoin/bitcoin-whale-activity-hits-six-year-high-as-retail-participation-stays-near-cycle-lows/">BitcoinEthereumNews — "Easiest 2 years" (Mar 2026)</a><br/>
+      <a href="https://coincu.com/markets/bitcoin-84000-cme-gap/">Coincu — $84k CME Gap Bearish Post (Mar 2026)</a><br/>
+      <a href="https://finance.yahoo.com/news/analyst-nailed-bitcoin-price-top-180733566.html">Yahoo Finance — Top → Bottom Caller (Feb 2026)</a><br/>
+      <a href="https://www.tradingview.com/news/newsbtc:a5832a4ca094b:0-analyst-who-called-bitcoin-s-top-correctly-now-predicting-the-bottom/">NewsBTC — Diminishing Cycle Bottom Math (Apr 2026)</a><br/>
+      <a href="https://bitcoinist.com/bitcoin-top-above-120000/">Bitcoinist — Diminishing Cycle Sets Bottom (Apr 2026)</a><br/>
+      <a href="https://www.coinlive.com/id/news-flash/1094321">CoinLive — SL Adjusted to $83k (Apr 22 2026)</a><br/>
+      <a href="https://phemex.com/news/article/trader-killa-shorts-bitcoin-at-74688-sets-stoploss-at-80000-73299">Phemex — Shorted at $74,688 (Apr 15 2026)</a><br/>
+      <a href="https://www.chaincatcher.com/en/article/2258782">ChainCatcher — Shorted at $74,688 (Apr 15 2026)</a><br/>
+      <a href="https://www.gate.com/news/detail/trader-killa-says-bitcoin-needs-to-hold-above-111-day-sma-to-confirm-trend-20528346">Gate News — 111-day SMA call (Apr 23 2026)</a><br/>
+      <a href="https://phemex.com/news/article/trader-highlights-bitcoins-monthly-reversal-pattern-on-5th-77848">Phemex — May 5 reversal pattern (May 1 2026)</a><br/>
+      <a href="https://www.okx.com/en-ae/feed/post/57265338760384">OKX Feed — Cycles Update post</a><br/>
+      <a href="https://scalpxtrades.com/">ScalpX — KillaXBT's trading desk</a><br/>
+      <a href="https://signalwavesai.com/articles/ict-trading-strategy">ICT Trading Strategy reference</a><br/>
+      <a href="https://www.avramescu.net/bitcoins-diminishing-monthly-returns-a-decade-ahead/">Avramescu BDRT — Diminishing Returns model</a><br/>
+      <a href="https://chartwhisperer.ca/blog/cumulative-volume-delta-cvd-crypto-trading-guide">ChartWhisperer — CVD guide</a><br/>
+      <a href="https://docs.trdr.io/key-features-and-indicators/volume-indicators/cumulative-volume-delta-cvd">trdr.io — Spot vs Perp CVD docs</a><br/>
+      <a href="https://bullcryptosignals.com/blog/fibonacci-golden-zone-fair-value-gap-strategy/">Fibonacci Golden Zone + FVG strategy</a>
+    </div>
+  </section>
+
+  <div class="footer">
+    Compiled 2026-05-05 from 25+ third-party sources quoting @KillaXBT's X posts directly.
+    All quotes verbatim from cited articles. Live dashboard: schdid.github.io/fib-tracker
+  </div>
+
+</div>
+</body>
+</html>

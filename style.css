@@ -27,6 +27,8 @@ header {
 header h1 { margin: 0; font-size: 18px; font-weight: 600; }
 header .meta { color: var(--muted); font-size: 12px; }
 header .meta a { color: var(--accent); margin-left: 12px; text-decoration: none; }
+header .meta a.toolkit-link { color: var(--gold); }
+header .meta a:hover { text-decoration: underline; }
 
 .tabs {
   display: flex; justify-content: space-between; align-items: center;
