@@ -1,8 +1,8 @@
 // Fib Tracker — frontend
-// Reads ../data/state.json (committed by GitHub Actions every 5 min) and renders
+// Reads data/state.json (committed by GitHub Actions every 5 min) and renders
 // the selected coin/exchange/timeframe with candles, fib lines, and live stats.
 
-const STATE_URL = "../data/state.json";
+const STATE_URL = "data/state.json";
 const TIMEFRAMES = ["15m", "30m", "1h", "4h", "1D", "1W"];
 
 const ui = {
